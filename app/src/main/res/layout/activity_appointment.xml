@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeToRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.applandeo.materialcalendarview.CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:headerColor="@color/tab_layout"
+            app:headerLabelColor="#FFFFFF"
+            app:pagesColor="#FFFFFF"
+            app:selectionColor="@color/tab_layout"
+            app:selectionLabelColor="#FFFFFF"
+            app:todayLabelColor="#30A626" />
+
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+
+</android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+
+

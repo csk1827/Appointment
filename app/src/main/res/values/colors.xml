@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#3c8dbc</color>
+    <color name="colorPrimaryDark">#207baf</color>
+    <color name="colorAccent">#4cb0ea</color>
+    <color name="tab_layout">#3c8dbc</color>
+
+    <color name="rescheduled">#ffc20e</color>
+    <color name="active">#49a942</color>
+    <color name="canceled">#ce181e</color>
+    <color name="completed">#3b87de</color>
+
+</resources>
