@@ -4,9 +4,8 @@
 
     <item
         android:id="@+id/action_logout"
-        android:title="Logout"
-        android:icon="@drawable/logout"
-        android:iconTint="@android:color/white"
+        android:title="@string/logout"
+        android:icon="@drawable/ic_logout"
         app:showAsAction="always"
         android:orderInCategory="101" />
 

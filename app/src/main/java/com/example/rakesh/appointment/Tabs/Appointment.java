@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
-import com.example.rakesh.appointment.AppointmentsTMListActivity;
+import com.example.rakesh.appointment.AppointmentsListActivity;
 import com.example.rakesh.appointment.R;
 
 import org.apache.http.HttpEntity;
@@ -80,7 +79,7 @@ public class Appointment extends Fragment {
         calendarView.setOnDayClickListener(new OnDayClickListener() {
             @Override
             public void onDayClick(EventDay eventDay) {
-                Intent intent = new Intent(getActivity(), AppointmentsTMListActivity.class);
+                Intent intent = new Intent(getActivity(), AppointmentsListActivity.class);
                 Date date = eventDay.getCalendar().getTime();
                 DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
                 intent.putExtra("dateSelected", df.format(date));
@@ -267,7 +266,6 @@ public class Appointment extends Fragment {
                 row = result.getJSONObject(i);
                 temp = row.getString("appoint_date");
                 counter = row.getInt("appiont_ctr");
-                Log.e("here", temp+"+"+row.getString("appiont_ctr"));
 
 
                 formatter = new SimpleDateFormat("dd-MM-yyyy");

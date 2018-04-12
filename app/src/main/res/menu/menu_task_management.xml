@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_sort"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_filter"
+        android:title="@string/show_by"
+        app:showAsAction="always" >
+
+
+        <menu>
+            <group android:id="@+id/group"
+                android:checkableBehavior="single">
+
+                <item android:id="@+id/menu_sort_by_assigned_date"
+                    android:title="@string/show_by_assigned_date"/>
+
+                <item android:id="@+id/menu_sort_by_compl_date"
+                    android:title="@string/show_by_completion_date"/>
+
+            </group>
+        </menu>
+
+
+    </item>
+
+</menu>

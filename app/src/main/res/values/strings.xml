@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Appointments</string>
+    <string name="app_name">Personal Manager</string>
     <string name="material_calendar_monday">M</string>
     <string name="material_calendar_tuesday">T</string>
     <string name="material_calendar_wednesday">W</string>
@@ -26,4 +26,8 @@
     <string name="material_calendar_today_button">Today</string>
     <string name="material_calendar_positive_button">OK</string>
     <string name="material_calendar_negative_button">Cancel</string>
+    <string name="logout">Logout</string>
+    <string name="show_by">Show by</string>
+    <string name="show_by_assigned_date">Show by Assigned date</string>
+    <string name="show_by_completion_date">Show by Completion date</string>
 </resources>

@@ -14,10 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Appointment_Details extends AppCompatActivity {
+public class AppointmentDetails extends AppCompatActivity {
 
-    TextView tvName,tvDesignation,tvTime,tvVenue,tvEmail,tvMobileNo,tvPurpose,tvAppointeeType,tvOthers;
-    LinearLayout othersLayout;
+    TextView tvName,tvDesignation,tvTime,tvVenue,tvEmail,tvMobileNo,tvPurpose,tvAppointeeType,tvOthers,tvStatus;
+    LinearLayout othersLayout,emailLayout,mobileNoLayout;
 
 
     @Override
@@ -27,11 +27,11 @@ public class Appointment_Details extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle("");
+        getSupportActionBar().setTitle("Appointment details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        final Data data = intent.getParcelableExtra("particular_appointment");
+        final AppointmentDataModel appointmentDataModel = intent.getParcelableExtra("particular_appointment");
 
         tvName = findViewById(R.id.tvName);
         tvDesignation = findViewById(R.id.tvDesignation);
@@ -43,19 +43,30 @@ public class Appointment_Details extends AppCompatActivity {
         tvAppointeeType = findViewById(R.id.tvAppointeeType);
         tvOthers = findViewById(R.id.tvOthers);
         othersLayout = findViewById(R.id.othersLayout);
+        tvStatus = findViewById(R.id.tvStatus);
+        emailLayout = findViewById(R.id.emailLayout);
+        mobileNoLayout = findViewById(R.id.mobileNoLayout);
 
-        tvName.setText(data.getName());
-        tvDesignation.setText(data.getDesignation());
-        tvTime.setText(data.getAppoint_time());
-        tvVenue.setText(data.getVenue());
-        tvEmail.setText(data.getEmail());
-        tvMobileNo.setText(data.getMobile_no());
-        tvPurpose.setText(data.getPurpose());
-        tvAppointeeType.setText(data.getAppointee_type());
+        tvName.setText(appointmentDataModel.getName());
+        tvDesignation.setText(appointmentDataModel.getDesignation());
+        tvTime.setText(appointmentDataModel.getAppoint_time());
+        tvVenue.setText(appointmentDataModel.getVenue());
+        tvPurpose.setText(appointmentDataModel.getPurpose());
+        tvStatus.setText(appointmentDataModel.getStatusName());
 
-        if(data.getOther_info() != null && (!data.getOther_info().equalsIgnoreCase("null") && !data.getOther_info().equalsIgnoreCase("") )){
+        if(appointmentDataModel.getOther_info() != null && (!appointmentDataModel.getOther_info().equalsIgnoreCase("null") && !appointmentDataModel.getOther_info().equalsIgnoreCase("") )){
             othersLayout.setVisibility(View.VISIBLE);
-            tvOthers.setText(data.getOther_info());
+            tvOthers.setText(appointmentDataModel.getOther_info());
+        }
+
+        if(appointmentDataModel.getEmail() != null && (!appointmentDataModel.getEmail().equalsIgnoreCase("null") && !appointmentDataModel.getEmail().equalsIgnoreCase("") )){
+            emailLayout.setVisibility(View.VISIBLE);
+            tvEmail.setText(appointmentDataModel.getEmail());
+        }
+
+        if(appointmentDataModel.getMobile_no() != null && (!appointmentDataModel.getMobile_no().equalsIgnoreCase("null") && !appointmentDataModel.getMobile_no().equalsIgnoreCase("") )){
+            mobileNoLayout.setVisibility(View.VISIBLE);
+            tvMobileNo.setText(appointmentDataModel.getMobile_no());
         }
 
         tvEmail.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +76,7 @@ public class Appointment_Details extends AppCompatActivity {
                 emailIntent.setType("message/rfc822");
                 emailIntent.setData(Uri.parse("mailto:"));
                 emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-                        new String[]{data.getEmail()});
+                        new String[]{appointmentDataModel.getEmail()});
                 emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
                         "Regarding Appointment");
                 startActivity(Intent.createChooser(emailIntent, "Regarding Appointment"));
@@ -77,9 +88,9 @@ public class Appointment_Details extends AppCompatActivity {
             public void onClick(View view) {
                 //make a call to the phone no
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Mobile_No", data.getMobile_no());
+                ClipData clip = ClipData.newPlainText("Mobile_No", appointmentDataModel.getMobile_no());
                 clipboard.setPrimaryClip(clip);
-                Toast.makeText(Appointment_Details.this,"Mobile number copied to clipboard.",Toast.LENGTH_LONG).show();
+                Toast.makeText(AppointmentDetails.this,"Mobile number copied to clipboard.",Toast.LENGTH_LONG).show();
             }
         });
 

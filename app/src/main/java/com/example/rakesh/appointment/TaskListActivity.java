@@ -28,19 +28,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
-public class AppointmentsTMListActivity extends AppCompatActivity {
+public class TaskListActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    DataAdapter dataAdapter;
-    ArrayList<Data> dataArrayList;
+    TaskDataAdapter dataAdapter;
+    ArrayList<TaskDataModel> dataArrayList;
     SwipeRefreshLayout swipeToRefresh;
-
-    LinearLayout no_appointments_layout;
+    LinearLayout no_tasks_layout;
 
     String dateSelected;
 
@@ -48,36 +44,41 @@ public class AppointmentsTMListActivity extends AppCompatActivity {
 
     HttpResponse httpResponse;
 
+    int show_type = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_appointment_tm_list);
+        setContentView(R.layout.activity_task_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
         dateSelected = intent.getStringExtra("dateSelected");
+        SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        show_type = app_preferences.getInt("show_type_state",1);
 
-        getSupportActionBar().setTitle(dateSelected);
+        if(show_type == 1) getSupportActionBar().setTitle(dateSelected+" (Assigned date)");
+        else getSupportActionBar().setTitle(dateSelected+" (Completion date)");
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = findViewById(R.id.recycler_view);
         swipeToRefresh = findViewById(R.id.swipeToRefresh);
-        recyclerView.setLayoutManager(new LinearLayoutManager(AppointmentsTMListActivity.this));
-        no_appointments_layout = findViewById(R.id.no_appointments_layout);
+        recyclerView.setLayoutManager(new LinearLayoutManager(TaskListActivity.this));
+        no_tasks_layout = findViewById(R.id.no_tasks_layout);
 
         dataArrayList = new ArrayList<>();
-        dataAdapter = new DataAdapter(AppointmentsTMListActivity.this, dataArrayList);
+        dataAdapter = new TaskDataAdapter(TaskListActivity.this, dataArrayList);
         recyclerView.setAdapter(dataAdapter);
 
         pd = new ProgressDialog(this);
         pd.setMessage("Please wait...");
         pd.setCancelable(false);
 
-        SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String jsonArray = app_preferences.getString(dateSelected,"null");
+        String jsonArray = app_preferences.getString(dateSelected+"task"+show_type,"null");
 
         new getDataFromDataBase().execute();
 
@@ -89,8 +90,6 @@ public class AppointmentsTMListActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }else{
-            new getDataFromDataBase().execute();
         }
 
 
@@ -101,8 +100,9 @@ public class AppointmentsTMListActivity extends AppCompatActivity {
             }
         });
 
-    }
 
+
+    }
 
     @Override
     protected void onPause() {
@@ -119,14 +119,13 @@ public class AppointmentsTMListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     @SuppressLint("StaticFieldLeak")
     public class getDataFromDataBase extends AsyncTask<String, Integer, JSONArray> {
 
         @Override
         protected JSONArray doInBackground(String... params) {
 
-            AppointmentsTMListActivity.this.runOnUiThread(new Runnable() {
+            TaskListActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     pd.show();
@@ -134,13 +133,19 @@ public class AppointmentsTMListActivity extends AppCompatActivity {
             });
             DefaultHttpClient httpclient = new DefaultHttpClient();
 
-            SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(AppointmentsTMListActivity.this);
+            SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(TaskListActivity.this);
             String cookie = app_preferences.getString("cookie","null");
             String auth_id = app_preferences.getString("authid", "null");
             String user_id = app_preferences.getString("username", "null");
 
-            HttpPost httpost = new HttpPost("https://www.iitism.ac.in/index.php/appointment/appoint/get_appointee_all_given_date_method/"
-                    +dateSelected+"/"+auth_id+"/"+user_id);
+            String finalUrl = "";
+            if(show_type == 1){
+                finalUrl = "https://www.iitism.ac.in/index.php/appointment/appoint/get_assign_task_appointee_name_given_date_method/"+dateSelected+"/"+auth_id+"/"+user_id;
+            }else{
+                finalUrl = "https://www.iitism.ac.in/index.php/appointment/appoint/get_complt_task_appointee_name_given_date_method/"+dateSelected+"/"+auth_id+"/"+user_id;
+            }
+
+            HttpPost httpost = new HttpPost(finalUrl);
             httpost.addHeader("Cookie","misci_session="+cookie);
             JSONArray jsonArray = null;
             try {
@@ -181,10 +186,10 @@ public class AppointmentsTMListActivity extends AppCompatActivity {
                 }
             }
             else{
-                Toast.makeText(AppointmentsTMListActivity.this,"Please check your Internet connection",Toast.LENGTH_LONG).show();
+                Toast.makeText(TaskListActivity.this,"Please check your Internet connection",Toast.LENGTH_LONG).show();
             }
 
-            AppointmentsTMListActivity.this.runOnUiThread(new Runnable() {
+            TaskListActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     swipeToRefresh.setRefreshing(false);
@@ -197,46 +202,46 @@ public class AppointmentsTMListActivity extends AppCompatActivity {
     public void showJSON(String json) throws JSONException, ParseException {
         dataArrayList.clear();
 
-        SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(AppointmentsTMListActivity.this);
+        SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(TaskListActivity.this);
         SharedPreferences.Editor editor = app_preferences.edit();
-        editor.putString(dateSelected,json);
+        editor.putString(dateSelected+"task"+show_type,json);
         editor.apply();
 
         JSONArray jsonArray = new JSONArray(json);
         if(jsonArray.length() != 0){
-            no_appointments_layout.setVisibility(View.GONE);
+            no_tasks_layout.setVisibility(View.GONE);
             for(int i =0;i<jsonArray.length();i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Data data = new Data();
-                data.setName(jsonObject.getString("name"));
-                data.setDesignation(jsonObject.getString("designation"));
-                data.setDepartment(jsonObject.getString("department"));
-                data.setEmail(jsonObject.getString("email"));
-                data.setMobile_no(jsonObject.getString("mobile_no"));
-                data.setAppointee_type(jsonObject.getString("appointee_type"));
+                TaskDataModel taskDataModel = new TaskDataModel();
+                taskDataModel.setAssignee_master_key(jsonObject.getString("assignee_master_key"));
+                taskDataModel.setAssignee_emp_id(jsonObject.getString("assignee_emp_id"));
+                taskDataModel.setAssignee_type(jsonObject.getString("assignee_type"));
+                taskDataModel.setAssigned_date(jsonObject.getString("assigned_date"));
+                taskDataModel.setCompletion_date(jsonObject.getString("completion_date"));
+                taskDataModel.setTask_info(jsonObject.getString("task_info"));
+                taskDataModel.setDomain(jsonObject.getString("domain"));
+                taskDataModel.setOther_info(jsonObject.getString("other_info"));
+                taskDataModel.setStatus(jsonObject.getInt("status"));
+                taskDataModel.setPriority(jsonObject.getInt("priority"));
+                taskDataModel.setName(jsonObject.getString("name"));
+                taskDataModel.setDesignation(jsonObject.getString("designation"));
+                taskDataModel.setEmail(jsonObject.getString("email"));
+                taskDataModel.setMobile_no(jsonObject.getString("mobile_no"));
+                taskDataModel.setDepartment(jsonObject.getString("department"));
+                taskDataModel.setStatus_name(jsonObject.getString("status_name"));
+                taskDataModel.setAddress(jsonObject.getString("address"));
 
-                String dateAndTime = jsonObject.getString("appoint_date");
-                Date dateObj = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault()).parse(dateAndTime);
-                String time = new SimpleDateFormat("hh:mm a",Locale.getDefault()).format(dateObj);
-                String date = new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault()).format(dateObj);
-
-                data.setAppoint_date(date);
-                data.setAppoint_time(time);
-                data.setVenue(jsonObject.getString("venue"));
-                data.setPurpose(jsonObject.getString("purpose"));
-                data.setOther_info(jsonObject.getString("other_info"));
-                data.setAppointee_master_key(jsonObject.getInt("appointee_master_key"));
-                data.setAppointment_status(jsonObject.getInt("status"));
-                data.setStatusName(jsonObject.getString("status_name"));
-                dataArrayList.add(data);
+                dataArrayList.add(taskDataModel);
             }
 
         }
         else{
-           no_appointments_layout.setVisibility(View.VISIBLE);
+            no_tasks_layout.setVisibility(View.VISIBLE);
         }
 
         dataAdapter.notifyDataSetChanged();
     }
+
+
 
 }

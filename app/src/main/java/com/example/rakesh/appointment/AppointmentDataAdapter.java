@@ -1,9 +1,7 @@
 package com.example.rakesh.appointment;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,26 +19,26 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.List;
 
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
+public class AppointmentDataAdapter extends RecyclerView.Adapter<AppointmentDataAdapter.ViewHolder> {
 
     private Activity context;
-    private List<Data> data;
+    private List<AppointmentDataModel> data;
 
-    DataAdapter(Activity c, List<Data> l) {
+    AppointmentDataAdapter(Activity c, List<AppointmentDataModel> l) {
         context = c;
         data = l;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.app_card_view, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.appointment_data_row, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Data mdata = data.get(position);
+        final AppointmentDataModel mdata = data.get(position);
 
         holder.tvName.setText((position + 1) + ". " + mdata.getName());
         holder.tvDesignation.setText(mdata.getDesignation());
@@ -131,7 +129,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, Appointment_Details.class);
+                Intent intent = new Intent(context, AppointmentDetails.class);
                 intent.putExtra("particular_appointment",data.get(holder.getAdapterPosition()));
                 context.startActivity(intent);
             }

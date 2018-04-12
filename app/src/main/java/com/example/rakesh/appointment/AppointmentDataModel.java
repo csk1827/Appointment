@@ -3,7 +3,7 @@ package com.example.rakesh.appointment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Data implements Parcelable {
+public class AppointmentDataModel implements Parcelable {
     String name,designation,department,email,mobile_no;
     String appointee_type,appoint_date,appoint_time,venue,purpose,other_info,statusName;
     int appointee_master_key,appointment_status;
@@ -24,9 +24,9 @@ public class Data implements Parcelable {
         this.appoint_time = appoint_time;
     }
 
-    Data(){}
+    AppointmentDataModel(){}
 
-    public Data(String name, String appoint_date, String venue) {
+    public AppointmentDataModel(String name, String appoint_date, String venue) {
         this.name = name;
         this.appoint_date = appoint_date;
         this.venue = venue;
@@ -152,31 +152,31 @@ public class Data implements Parcelable {
         parcel.writeString(this.statusName);
     }
 
-    public static final Parcelable.Creator CREATOR = new Creator<Data>() {
+    public static final Parcelable.Creator CREATOR = new Creator<AppointmentDataModel>() {
 
         @Override
-        public Data createFromParcel(Parcel source) {
-            Data data = new Data();
-            data.setName(source.readString());
-            data.setDesignation(source.readString());
-            data.setDepartment(source.readString());
-            data.setEmail(source.readString());
-            data.setMobile_no(source.readString());
-            data.setAppointee_type(source.readString());
-            data.setAppoint_date(source.readString());
-            data.setAppoint_time(source.readString());
-            data.setVenue(source.readString());
-            data.setPurpose(source.readString());
-            data.setOther_info(source.readString());
-            data.setAppointee_master_key(source.readInt());
-            data.setAppointment_status(source.readInt());
-            data.setStatusName(source.readString());
-            return data;
+        public AppointmentDataModel createFromParcel(Parcel source) {
+            AppointmentDataModel appointmentDataModel = new AppointmentDataModel();
+            appointmentDataModel.setName(source.readString());
+            appointmentDataModel.setDesignation(source.readString());
+            appointmentDataModel.setDepartment(source.readString());
+            appointmentDataModel.setEmail(source.readString());
+            appointmentDataModel.setMobile_no(source.readString());
+            appointmentDataModel.setAppointee_type(source.readString());
+            appointmentDataModel.setAppoint_date(source.readString());
+            appointmentDataModel.setAppoint_time(source.readString());
+            appointmentDataModel.setVenue(source.readString());
+            appointmentDataModel.setPurpose(source.readString());
+            appointmentDataModel.setOther_info(source.readString());
+            appointmentDataModel.setAppointee_master_key(source.readInt());
+            appointmentDataModel.setAppointment_status(source.readInt());
+            appointmentDataModel.setStatusName(source.readString());
+            return appointmentDataModel;
         }
 
         @Override
-        public Data[] newArray(int size) {
-            return new Data[size];
+        public AppointmentDataModel[] newArray(int size) {
+            return new AppointmentDataModel[size];
         }
     };
 

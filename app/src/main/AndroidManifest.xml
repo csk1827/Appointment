@@ -9,23 +9,28 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_launcher_pm"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login">
+        <activity android:name=".Login"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" >
-
-        </activity>
-        <activity android:name=".AppointmentsTMListActivity" />
-        <activity android:name=".Appointment_Details" />
-        <activity android:name=".TManagement_Details" />
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity android:name=".AppointmentsListActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".AppointmentDetails"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".TaskDetails"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".TaskListActivity"
+            android:configChanges="orientation|screenSize" />
     </application>
 
 </manifest>
